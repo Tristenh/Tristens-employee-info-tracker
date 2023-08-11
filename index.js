@@ -49,6 +49,9 @@ function start() {
       if (data.tableOfContents.includes("add an employee")) {
         addAnEmployee();
       }
+      if (data.tableOfContents.includes("update an employee role")) {
+        updateAnEmployeeRole();
+      }
     });
 }
 
@@ -100,10 +103,8 @@ function addADepartment() {
         `INSERT INTO departments (name)
         VALUES (?) `,
         [addDepartment],
-        function (err, results, fields) {
-          console.log("success"); // results contains rows returned by server
-          start();
-        }
+        console.log("success"), // results contains rows returned by server
+        start()
       );
     });
 }
@@ -138,10 +139,8 @@ function addARole() {
       connection.execute(
         `INSERT INTO roles (title, salary, department) VALUES (?, ?, ?)`,
         [addRole, addSalary, addDepartment],
-        function (err, results, fields) {
-          console.log("success");
-          start();
-        }
+        console.log("success"),
+        start()
       );
     });
 }
@@ -184,10 +183,45 @@ function addAnEmployee() {
       connection.execute(
         `INSERT INTO employees (first_name, last_name, title) VALUES (?, ?, ?)`,
         [addName, addLastName, addEmployeeRole],
-        function (err, results, fields) {
-          console.log("success"); // results contains rows returned by server
-          start();
-        }
+        console.log("success"),
+        start()
+      );
+    });
+}
+
+// update an employee role
+function updateAnEmployeeRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "updateEmployee",
+        message: "Which employee's role do you want to update?",
+      },
+      {
+        type: "list",
+        name: "updateEmployeeRole",
+        message: "Which role do you want to assign the selected employee?",
+        choices: [
+          "Sales Lead",
+          "Salesperson",
+          "Lead Engineer",
+          "Software Engineer",
+          "Account Manager",
+          "Accountant",
+          "Legal Team Lead",
+          "Lawyer",
+        ],
+      },
+    ])
+    .then((data) => {
+      const updateEmployee = data.updateEmployee;
+      const updateEmployeeRole = data.updateEmployeeRole;
+      connection.execute(
+        `UPDATE employees SET title = ? WHERE first_name = ?`,
+        [updateEmployeeRole, updateEmployee],
+        console.log("success"),
+        start()
       );
     });
 }
