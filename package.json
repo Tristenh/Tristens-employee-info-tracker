@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/Tristenh/Tristens-employee-info-tracker#readme",
   "dependencies": {
-    "inquirer": "^9.2.10",
+    "inquirer": "^8.2.6",
     "mysql2": "^3.6.0"
   }
 }
