@@ -30,12 +30,37 @@ function start() {
       if (data.tableOfContents.includes("view all departments")) {
         viewAllDepartments();
       }
+      if (data.tableOfContents.includes("view all roles")) {
+        viewAllRoles();
+      }
+      if (data.tableOfContents.includes("view all employees")) {
+        viewAllEmployees();
+      }
     });
 }
 
 function viewAllDepartments() {
   connection.query(
     "SELECT * FROM departments",
+    function (err, results, fields) {
+      console.table(results); // results contains rows returned by server
+      start();
+    }
+  );
+}
+function viewAllRoles() {
+  connection.execute("SELECT * FROM `roles`", function (err, results, fields) {
+    console.table(results); // results contains rows returned by server
+    start();
+  });
+}
+
+function viewAllEmployees() {
+  connection.execute(
+    `SELECT employees.*, roles.department, roles.salary 
+        FROM employees 
+        LEFT JOIN roles
+        ON employees.title = roles.title`,
     function (err, results, fields) {
       console.table(results); // results contains rows returned by server
       start();
