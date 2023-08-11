@@ -1,11 +1,15 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
+
+// create connection
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "12345678",
   database: "employeeTracker_db",
 });
+
+//  table of contents, start funtion
 start();
 function start() {
   inquirer
@@ -39,9 +43,16 @@ function start() {
       if (data.tableOfContents.includes("add a department")) {
         addADepartment();
       }
+      if (data.tableOfContents.includes("add a role")) {
+        addARole();
+      }
+      if (data.tableOfContents.includes("add an employee")) {
+        addAnEmployee();
+      }
     });
 }
 
+// view all departments
 function viewAllDepartments() {
   connection.query(
     "SELECT * FROM departments",
@@ -51,6 +62,7 @@ function viewAllDepartments() {
     }
   );
 }
+// view all roles
 function viewAllRoles() {
   connection.execute("SELECT * FROM `roles`", function (err, results, fields) {
     console.table(results); // results contains rows returned by server
@@ -58,6 +70,7 @@ function viewAllRoles() {
   });
 }
 
+//  view all employees
 function viewAllEmployees() {
   connection.execute(
     `SELECT employees.*, roles.department, roles.salary 
@@ -71,11 +84,11 @@ function viewAllEmployees() {
   );
 }
 
+//  add a department
 function addADepartment() {
   inquirer
     .prompt([
       {
-        //  add a department
         type: "input",
         name: "addDepartment",
         message: "What is the name of the department?",
@@ -87,6 +100,90 @@ function addADepartment() {
         `INSERT INTO departments (name)
         VALUES (?) `,
         [addDepartment],
+        function (err, results, fields) {
+          console.log("success"); // results contains rows returned by server
+          start();
+        }
+      );
+    });
+}
+
+// add a role
+let roles = [];
+function addARole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "addRole",
+        message: "What is the name of the role?",
+      },
+      {
+        type: "input",
+        name: "addSalary",
+        message: "What is the salary of the role?",
+      },
+      {
+        type: "list",
+        name: "addDepartment",
+        message: "which department does the role belong to?",
+        choices: ["Engineering", "Finance", "Legal", "sales", "Service"],
+      },
+    ])
+    .then((data) => {
+      const addRole = data.addRole;
+      const addSalary = data.addSalary;
+      const addDepartment = data.addDepartment;
+      roles.push(addRole);
+      connection.execute(
+        `INSERT INTO roles (title, salary, department) VALUES (?, ?, ?)`,
+        [addRole, addSalary, addDepartment],
+        function (err, results, fields) {
+          console.log("success");
+          start();
+        }
+      );
+    });
+}
+
+// add an employee
+function addAnEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "addName",
+        message: "What is the employee's first name?",
+      },
+      {
+        type: "input",
+        name: "addLastName",
+        message: "What is the employee's last name?",
+      },
+      {
+        type: "list",
+        name: "addEmployeeRole",
+        message: "What is the employee's role?",
+        choices: [
+          ...roles,
+          "Sales Lead",
+          "Salesperson",
+          "Lead Engineer",
+          "Software Engineer",
+          "Account Manager",
+          "Accountant",
+          "Legal Team Lead",
+          "Lawyer",
+        ],
+      },
+    ])
+    .then((data) => {
+      const addName = data.addName;
+      const addLastName = data.addLastName;
+      const addEmployeeRole = data.addEmployeeRole;
+      connection.execute(
+        `INSERT INTO employees (first_name, last_name, title) VALUES (?, ?, ?)`,
+        [addName, addLastName, addEmployeeRole],
         function (err, results, fields) {
           console.log("success"); // results contains rows returned by server
           start();
