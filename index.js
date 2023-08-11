@@ -36,6 +36,9 @@ function start() {
       if (data.tableOfContents.includes("view all employees")) {
         viewAllEmployees();
       }
+      if (data.tableOfContents.includes("add a department")) {
+        addADepartment();
+      }
     });
 }
 
@@ -66,4 +69,28 @@ function viewAllEmployees() {
       start();
     }
   );
+}
+
+function addADepartment() {
+  inquirer
+    .prompt([
+      {
+        //  add a department
+        type: "input",
+        name: "addDepartment",
+        message: "What is the name of the department?",
+      },
+    ])
+    .then((data) => {
+      const addDepartment = data.addDepartment;
+      connection.execute(
+        `INSERT INTO departments (name)
+        VALUES (?) `,
+        [addDepartment],
+        function (err, results, fields) {
+          console.log("success"); // results contains rows returned by server
+          start();
+        }
+      );
+    });
 }
