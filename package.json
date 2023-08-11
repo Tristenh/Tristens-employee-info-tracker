@@ -1,0 +1,24 @@
+{
+  "name": "tristens-employee-info-tracker",
+  "version": "1.0.0",
+  "description": "build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tristenh/Tristens-employee-info-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tristenh/Tristens-employee-info-tracker/issues"
+  },
+  "homepage": "https://github.com/Tristenh/Tristens-employee-info-tracker#readme",
+  "dependencies": {
+    "inquirer": "^9.2.10",
+    "mysql2": "^3.6.0"
+  }
+}
