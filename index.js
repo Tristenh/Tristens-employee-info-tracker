@@ -1,3 +1,4 @@
+// required packages
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 
@@ -9,7 +10,7 @@ const connection = mysql.createConnection({
   database: "employeeTracker_db",
 });
 
-//  table of contents, start funtion
+// start funtion, table of contents,
 start();
 function start() {
   inquirer
@@ -30,6 +31,7 @@ function start() {
         ],
       },
     ])
+    // if option selected from list run a function
     .then((data) => {
       if (data.tableOfContents.includes("view all departments")) {
         viewAllDepartments();
@@ -60,17 +62,19 @@ function viewAllDepartments() {
   connection.query(
     "SELECT * FROM departments",
     function (err, results, fields) {
-      console.table(results); // results contains rows returned by server
+      // results contains rows returned by server
+      console.table(results);
       start();
     }
   );
 }
 // view all roles
 function viewAllRoles() {
-  connection.execute(
+  connection.query(
     "SELECT roles.id, roles.title, roles.department, roles.salary FROM `roles`",
+    // results contains rows returned by server
     function (err, results, fields) {
-      console.table(results); // results contains rows returned by server
+      console.table(results);
       start();
     }
   );
@@ -78,13 +82,14 @@ function viewAllRoles() {
 
 //  view all employees
 function viewAllEmployees() {
-  connection.execute(
+  connection.query(
     `SELECT employees.*, roles.department, roles.salary , roles.manager
         FROM employees 
         LEFT JOIN roles
         ON employees.title = roles.title`,
+    // results contains rows returned by server
     function (err, results, fields) {
-      console.table(results); // results contains rows returned by server
+      console.table(results);
       start();
     }
   );
@@ -102,17 +107,19 @@ function addADepartment() {
     ])
     .then((data) => {
       const addDepartment = data.addDepartment;
-      connection.execute(
+      //   prepared statement
+      connection.query(
         `INSERT INTO departments (name)
         VALUES (?) `,
         [addDepartment],
-        console.log("success"), // results contains rows returned by server
+        console.log("success"),
         start()
       );
     });
 }
 
 // add a role
+// stored addRole answer
 let roles = [];
 function addARole() {
   inquirer
@@ -138,8 +145,10 @@ function addARole() {
       const addRole = data.addRole;
       const addSalary = data.addSalary;
       const addDepartment = data.addDepartment;
+      //push addRole to role
       roles.push(addRole);
-      connection.execute(
+      //   prepared statement
+      connection.query(
         `INSERT INTO roles (title, salary, department) VALUES (?, ?, ?)`,
         [addRole, addSalary, addDepartment],
         console.log("success"),
@@ -167,6 +176,7 @@ function addAnEmployee() {
         name: "addEmployeeRole",
         message: "What is the employee's role?",
         choices: [
+          // addRole answer
           ...roles,
           "Sales Lead",
           "Salesperson",
@@ -183,7 +193,8 @@ function addAnEmployee() {
       const addName = data.addName;
       const addLastName = data.addLastName;
       const addEmployeeRole = data.addEmployeeRole;
-      connection.execute(
+      //   prepared statement
+      connection.query(
         `INSERT INTO employees (first_name, last_name, title) VALUES (?, ?, ?)`,
         [addName, addLastName, addEmployeeRole],
         console.log("success"),
@@ -206,6 +217,8 @@ function updateAnEmployeeRole() {
         name: "updateEmployeeRole",
         message: "Which role do you want to assign the selected employee?",
         choices: [
+          // addRole answer
+          ...roles,
           "Sales Lead",
           "Salesperson",
           "Lead Engineer",
@@ -220,7 +233,8 @@ function updateAnEmployeeRole() {
     .then((data) => {
       const updateEmployee = data.updateEmployee;
       const updateEmployeeRole = data.updateEmployeeRole;
-      connection.execute(
+      //   prepared statement
+      connection.query(
         `UPDATE employees SET title = ? WHERE first_name = ?`,
         [updateEmployeeRole, updateEmployee],
         console.log("success"),
