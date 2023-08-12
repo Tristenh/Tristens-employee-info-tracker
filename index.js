@@ -77,7 +77,7 @@ function viewAllDepartments() {
 // view all roles
 function viewAllRoles() {
   connection.query(
-    "SELECT roles.id, roles.title, roles.department, roles.salary FROM `roles`",
+    "SELECT * FROM `roles`",
     // results contains rows returned by server
     function (err, results, fields) {
       console.table(results);
@@ -89,7 +89,7 @@ function viewAllRoles() {
 //  view all employees
 function viewAllEmployees() {
   connection.query(
-    `SELECT employees.id, employees.first_name, employees.last_name, roles.department, roles.salary, employees.manager
+    `SELECT employees.id, employees.first_name, employees.last_name,employees.title, roles.department, roles.salary, employees.manager
         FROM employees 
         LEFT JOIN roles
         ON employees.title = roles.title`,
