@@ -89,7 +89,7 @@ function viewAllRoles() {
 //  view all employees
 function viewAllEmployees() {
   connection.query(
-    `SELECT employees.*, roles.department, roles.salary , roles.manager
+    `SELECT employees.id, employees.first_name, employees.last_name, roles.department, roles.salary, employees.manager
         FROM employees 
         LEFT JOIN roles
         ON employees.title = roles.title`,
@@ -198,15 +198,31 @@ function addAnEmployee() {
           ...defaultRoles,
         ],
       },
+      {
+        type: "list",
+        name: "addEmployeeManager",
+        message: "Who is the employee's manager?",
+        choices: [
+          "none",
+          "john Doe",
+          "Ashley Rodriguez",
+          "Kunal Singh",
+          "Sarah Lourd",
+        ],
+      },
     ])
     .then((data) => {
       const addName = data.addName;
       const addLastName = data.addLastName;
       const addEmployeeRole = data.addEmployeeRole;
+      let addEmployeeManager = data.addEmployeeManager;
+      if (data.addEmployeeManager.includes("none")) {
+        addEmployeeManager = null;
+      }
       //   prepared statement
       connection.query(
-        `INSERT INTO employees (first_name, last_name, title) VALUES (?, ?, ?)`,
-        [addName, addLastName, addEmployeeRole],
+        `INSERT INTO employees (first_name, last_name, title, manager) VALUES (?, ?, ?, ?)`,
+        [addName, addLastName, addEmployeeRole, addEmployeeManager],
         console.log("success"),
         start()
       );
