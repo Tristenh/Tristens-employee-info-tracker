@@ -28,6 +28,7 @@ function start() {
           "add a role",
           "add an employee",
           "update an employee role",
+          "Quit",
         ],
       },
     ])
@@ -53,6 +54,11 @@ function start() {
       }
       if (data.tableOfContents.includes("update an employee role")) {
         updateAnEmployeeRole();
+      }
+      if (data.tableOfContents.includes("Quit")) {
+        console.log("exiting the application");
+        connection.end();
+        process.exit(0);
       }
     });
 }
@@ -157,6 +163,17 @@ function addARole() {
     });
 }
 
+// default roles
+const defaultRoles = [
+  "Sales Lead",
+  "Salesperson",
+  "Lead Engineer",
+  "Software Engineer",
+  "Account Manager",
+  "Accountant",
+  "Legal Team Lead",
+  "Lawyer",
+];
 // add an employee
 function addAnEmployee() {
   inquirer
@@ -176,16 +193,9 @@ function addAnEmployee() {
         name: "addEmployeeRole",
         message: "What is the employee's role?",
         choices: [
-          // addRole answer
+          // addRole answers
           ...roles,
-          "Sales Lead",
-          "Salesperson",
-          "Lead Engineer",
-          "Software Engineer",
-          "Account Manager",
-          "Accountant",
-          "Legal Team Lead",
-          "Lawyer",
+          ...defaultRoles,
         ],
       },
     ])
@@ -219,14 +229,7 @@ function updateAnEmployeeRole() {
         choices: [
           // addRole answer
           ...roles,
-          "Sales Lead",
-          "Salesperson",
-          "Lead Engineer",
-          "Software Engineer",
-          "Account Manager",
-          "Accountant",
-          "Legal Team Lead",
-          "Lawyer",
+          ...defaultRoles,
         ],
       },
     ])
