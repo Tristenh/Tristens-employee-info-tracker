@@ -11,7 +11,9 @@ CREATE TABLE roles (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(30),
   department VARCHAR(30),
-  salary INT NOT NULL
+  salary INT NOT NULL,
+  manager VARCHAR(30)
+
 );
 CREATE TABLE employees (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

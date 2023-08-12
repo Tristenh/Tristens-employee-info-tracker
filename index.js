@@ -67,16 +67,19 @@ function viewAllDepartments() {
 }
 // view all roles
 function viewAllRoles() {
-  connection.execute("SELECT * FROM `roles`", function (err, results, fields) {
-    console.table(results); // results contains rows returned by server
-    start();
-  });
+  connection.execute(
+    "SELECT roles.id, roles.title, roles.department, roles.salary FROM `roles`",
+    function (err, results, fields) {
+      console.table(results); // results contains rows returned by server
+      start();
+    }
+  );
 }
 
 //  view all employees
 function viewAllEmployees() {
   connection.execute(
-    `SELECT employees.*, roles.department, roles.salary 
+    `SELECT employees.*, roles.department, roles.salary , roles.manager
         FROM employees 
         LEFT JOIN roles
         ON employees.title = roles.title`,
